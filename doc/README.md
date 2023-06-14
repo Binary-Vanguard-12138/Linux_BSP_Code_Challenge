@@ -16,3 +16,40 @@ Also, create the instructions how the code should be compiled.
 Given you have an enterprise grade Linux system with a large number of devices used by customers. The devices can only be reached remotely. If you would have the freedom to setup a remote update system from scratch, how would you set it up?
 
 Please provide a short, high-level description of your design.
+
+# Compilation and running of the project
+
+## Compilation
+
+### Prerequisites
+
+You should have `make` and `gcc` installed on your Linux development machine.
+
+### Compilation
+
+In the `bash` terminal, change directory(`cd`) to the root directory of the project and run `make`.
+
+```bash
+cd ~/Linux_BSP_Code_Challenge/
+make
+```
+
+It will generate two executable binary files named `server` and `client`.
+
+You can also clean up binary files by running `make clean`.
+
+## Running examples
+
+First, open bash terminal and run the server.
+
+```bash
+cd ~/Linux_BSP_Code_Challenge/bin/
+./server -p 55555
+```
+
+Next, open another bash terminal and run the client.
+
+```bash
+cd ~/Linux_BSP_Code_Challenge/bin/
+./client -h localhost -p 55555
+```
