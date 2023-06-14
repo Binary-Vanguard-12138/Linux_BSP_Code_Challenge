@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 		exit(-1);
 	}
 
-	while ((option = getopt(argc, argv,"h:p:")) != -1) {
+	while ((option = getopt(argc, argv,"p:")) != -1) {
 		switch (option) {
 		case 'p' :
 			port = atoi(optarg);
@@ -48,7 +48,13 @@ int main(int argc, char **argv)
 	sigaction(SIGINT, &act, NULL);
 
 	int socketfd = server_init(port);
-	<... fill in ...>
+	// <... fill in ...>
+	if (socketfd < 0) {
+            fprintf(stderr, "Failed to initialize the server for port: %d\n", port);
+            retval = -1;
+            goto exit;
+        }
+
 
 	printf("The time synchronization server is up and running on port %d. Close it down using CTRL-C.\n", port);
 
@@ -60,6 +66,7 @@ int main(int argc, char **argv)
 		retval = -1;
 	}
 
+exit:
 	return retval;
 }
 
@@ -78,7 +85,7 @@ static void write_time_stamp(int socketfd, struct sockaddr_in remote)
 
 	timestamp = htonll(get_time_since_epoch());
 
-	if (sendto(socketfd, <... fill in ...>) != sizeof(uint64_t)) {
+	if (sendto(socketfd, &timestamp, sizeof(uint64_t), 0, (struct sockaddr *)&remote, addrlen) != sizeof(uint64_t)) {
 		perror("Failed to send a client response");
 	}
 }
@@ -131,12 +138,12 @@ static int server_init(int port)
 	socketaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	socketaddr.sin_port = htons(port);
 
-	if ((socketfd = <... fill in ...>) == -1) {
+	if ((socketfd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
 		fprintf(stderr, "Failed to open a socket for port: %d\n", port);
 		return -1;
 	}
 
-	if (bind(<... fill in ...>) < 0) {
+	if (bind(socketfd, (struct sockaddr *)&socketaddr, sizeof(socketaddr)) < 0) {
 		fprintf(stderr, "Failed to bind the socket.\n");
 		return -1;
 	}

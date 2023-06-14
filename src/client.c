@@ -36,10 +36,12 @@ int main(int argc, char **argv)
 	while ((option = getopt(argc, argv,"h:p:")) != -1) {
 		switch (option) {
 		case 'p' :
-			<... fill in ...>
+			// <... fill in ...>
+			port = atoi(optarg);
 			break;
 		case 'h' :
-			<... fill in ...>
+			// <... fill in ...>
+			strncpy(hostname, optarg, sizeof(hostname));
 			break;
 		default:
 			print_usage(argv[0]);
@@ -70,12 +72,14 @@ static void connect_to_server(char *hostname, int port)
 	socklen_t addrlen = sizeof(serveraddr);
 	uint64_t timestamp = 0;
 
-	<... fill in ...>
+	// <... fill in ...>
+	socketfd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (socketfd < 0) {
 		error("ERROR opening socket");
 	}
 
-	<... fill in ...>
+	// <... fill in ...>
+	server = gethostbyname(hostname);
 	if (server == NULL) {
 		error("Hostname cannot be resolved.");
 	}
@@ -125,7 +129,8 @@ static void compare_timestamp(uint64_t servertime)
 {
 	uint64_t mytime = get_time_since_epoch();
 
-	<... fill in ...>
+	// <... fill in ...>
+	uint64_t diff = mytime > servertime ? mytime - servertime : servertime - mytime;
 
 	printf("Client: %lu ms, Server: %lu ms, Abs. diff: %lu ms\n", mytime, servertime, diff);
 }
